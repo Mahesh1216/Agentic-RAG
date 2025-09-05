@@ -13,3 +13,4 @@ numpy==1.26.4
 requests 
 beautifulsoup4
 google-api-python-client
+streamlit

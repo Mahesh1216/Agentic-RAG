@@ -8,28 +8,29 @@ st.set_page_config(page_title="Boss Wallah Chatbot", page_icon=":robot:")
 st.title("🤖 Boss Wallah Chatbot")
 
 # User input
-query = st.text_input("Enter your query:", "Tell me about honey bee farming course")
+query = st.text_area("Enter your query:", "Tell me about honey bee farming course", height=100)
 
-# Request type selection
-response_type = st.radio("Choose response type:", ("rag", "llm", "agent"))
+# Request type selection with default to RAG
+response_type = st.radio("Response type:", ["Agentic AI"], index=0)
 
-if st.button("Get Response"):
+# Map the selected response type to the backend type
+type_mapping = {
+    "Agentic AI": "agent",
+}
+
+if st.button("Get Response", type="primary"):
     if query:
         try:
-            if response_type == "agent":
-                endpoint = f"{FASTAPI_URL}/agent-chat"
-            else:
-                endpoint = f"{FASTAPI_URL}/chat"
-
-            payload = {"query": query, "type": response_type}
+            endpoint = f"{FASTAPI_URL}/chat"
+            payload = {"query": query, "type": type_mapping[response_type]}
             
             with st.spinner("Getting response..."):
                 response = requests.post(endpoint, json=payload)
-                response.raise_for_status()  # Raise an exception for HTTP errors
+                response.raise_for_status()
                 
                 result = response.json()
                 st.subheader("Response:")
-                st.write(result.get("response", "No response received."))
+                st.markdown(f"{result.get('response', 'No response received.')}")
                 
         except requests.exceptions.ConnectionError:
             st.error("Could not connect to the FastAPI backend. Please ensure it is running at http://localhost:8000.")
@@ -40,11 +41,21 @@ if st.button("Get Response"):
     else:
         st.warning("Please enter a query.")
 
+# Add some custom styling
 st.markdown("""
 <style>
-.stButton>button {
-    background-color: #4CAF50;
-    color: white;
-}
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        padding: 0.5rem 2rem;
+        border-radius: 5px;
+    }
+    .stButton>button:hover {
+        background-color: #45a049;
+    }
+    .stTextArea>div>div>textarea {
+        min-height: 100px;
+    }
 </style>
 """, unsafe_allow_html=True)

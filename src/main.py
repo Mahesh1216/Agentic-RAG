@@ -33,8 +33,8 @@ def chat(request: ChatRequest):
             # Use LLM only
             answer = get_llm_response(request.query)
         else:
-            # Use RAG retriever + LLM
-            answer = get_rag_response(retriever, request.query)
+            # Use RAG retriever + LLM, with agentic fallback
+            answer = agentic_search(retriever, request.query)
         
         return {"query": request.query, "type": request.type, "response": answer}
     except Exception as e:
