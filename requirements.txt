@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pandas
+faiss-cpu
+sentence-transformers
+deep-translator
+langdetect
+google-generativeai
+python-dotenv
+langchain-community 
+langchain-huggingface
+numpy==1.26.4
+requests 
+beautifulsoup4
+google-api-python-client
